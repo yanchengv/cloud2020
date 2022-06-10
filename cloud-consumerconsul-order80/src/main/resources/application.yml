@@ -1,0 +1,10 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: consul-cloud-order-service
+  cloud:
+    cousul:
+      host: localhost
+      port: 8500

@@ -1,0 +1,53 @@
+server:
+  port: 8001
+
+eureka:
+  client:
+    register-with-eureka: true #表示将自己向注册中心注册 默认true
+    fetchRegistry: true #是否从EurekaServer抓取已有的注册信息，默认为true,单点无所谓，集群必须设置为true才能配合使用ribbon使用负载均衡
+    service-url:
+      #设置与eureka server交互的地址查询服务和注册服务都需要依赖这个地址
+       defaultZone: http://eureka7001.com:7001/eureka/ #单机版
+#      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/ #集群
+#  instance:
+    instance-id: payment8001
+    prefer-ip-address: true
+    # 心跳检测检测与续约时间
+    # 测试时将值设置设置小些，保证服务关闭后注册中心能及时踢出服务
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒
+    lease-renewal-interval-in-seconds: 90
+    #Eureka服务端在收到最后一次心跳后等待时间上限，单位为秒（默认90s）超时后踢出服务
+    lease-expiration-duration-in-seconds: 90
+
+spring:
+  application:
+    name: cloud-payment-service
+  datasource:
+    name: druidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://rm-2zefzzv3s8d74dyfvho.pg.rds.aliyuncs.com:3432/demo
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: aranya_staging #\u7528\u6237\u540D
+    password: e23TsmZasGyEAqd2018 #\u5BC6\u7801
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 30000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select '1' from dual
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      max-pool-prepared-statement-per-connection-size: 20
+
+mybatis:
+#  mapper-locations: classpath*:mapper/*Mapper.xml
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguitu.springcloud.entities
+  configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #\u67E5\u8BE2sql\u65E5\u5FD7\u663E\u793A\u5728\u63A7\u5236\u53F0,\u8FD9\u4E2A\u662F\u53EF\u4EE5sql\u3001\u53C2\u6570\u3001\u67E5\u8BE2\u7ED3\u679C\u7684
+
